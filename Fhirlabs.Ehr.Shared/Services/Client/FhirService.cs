@@ -48,6 +48,22 @@ public class FhirService : IFhirService
         return bundle.Entry.Select(e => e.Resource as Practitioner).FirstOrDefault();
     }
 
+    public async Task<Bundle> GetPractitioners(Bundle? currentPage, string name)
+    {
+        if (currentPage == null)
+        {
+            var searchParams = new SearchParams();
+            if (!string.IsNullOrEmpty(name))
+            {
+                searchParams.Add("name", name);
+            }
+
+            return await _fhirClient.SearchAsync<Practitioner>(searchParams.OrderBy("name").LimitTo(10));
+        }
+
+        return await _fhirClient.ContinueAsync(currentPage);
+    }
+
     private SearchParams BuildSearchParams(PatientSearchModel model)
     {
         var searchParams = new SearchParams();

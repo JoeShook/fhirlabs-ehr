@@ -149,8 +149,9 @@
         public string ConfirmPassword { get; set; } = "";
     }
 
-    private void FindSystemEmail()
+    private async Task FindSystemEmail()
     {
-        var result = Dialog.ShowAsync<PractitionerEmailDialog>("Find a Practitioner Email", new DialogOptions() { FullScreen = true });
+        var reference = await Dialog.ShowAsync<PractitionerEmailDialog>("Find a Practitioner Email", new DialogOptions() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        Input.Email = (await reference.Result).Data?.ToString() ?? "";
     }
 }

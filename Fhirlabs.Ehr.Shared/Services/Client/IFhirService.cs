@@ -19,4 +19,5 @@ public interface IFhirService
 
     System.Threading.Tasks.Task DeletePatientAsync(string location);
     Task<Practitioner?> GetPractitioner(string? userEmail);
+    Task<Bundle> GetPractitioners(Bundle? currentPage, string name);
 }

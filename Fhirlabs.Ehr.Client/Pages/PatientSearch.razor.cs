@@ -7,13 +7,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Options;
 using Microsoft.JSInterop;
 using MudBlazor;
-using Newtonsoft.Json;
-using System.Text.Json;
-using static MudBlazor.CategoryTypes;
-using JsonSerializer = System.Text.Json.JsonSerializer;
 using Task = System.Threading.Tasks.Task;
 
-namespace Fhirlabs.Ehr.Components.Pages;
+namespace Fhirlabs.Ehr.Client.Pages;
 
 public partial class PatientSearch
 {
@@ -41,35 +37,6 @@ public partial class PatientSearch
 
     private async Task Search()
     {
-        // _selectedItemText = string.Empty;
-        // StateHasChanged();
-        // await Task.Delay(100);
-        //
-        //
-        // _model.RowsPerPage = 5;
-        // var bundle = await FhirService.SearchPatient(_model);
-        // currentPage = bundle;
-        //
-        // var operationOutcome = bundle.Entry.Select(e => e.Resource as OperationOutcome).ToList();
-        //
-        // if (operationOutcome.Any(o => o != null))
-        // {
-        //     string? errorMessage = null;
-        //
-        //     foreach (var issue in operationOutcome.First()!.Issue)
-        //     {
-        //         errorMessage += $"Error:: Details: {issue.Details?.Text}.<br/>"
-        //                         + $"Diagnostics: {issue.Diagnostics}.<br/>"
-        //                         + $"IssueType: {issue.Code}.<br/>";
-        //     }
-        //
-        //     _outComeMessage = errorMessage;
-        // }
-        // else
-        // {
-        //     _outComeMessage = null;
-        // }
-        
         currentPage = null;
         _table.CurrentPage = 0;
         _model.RowsPerPage = RowsPerPage;
