@@ -1,4 +1,7 @@
 ﻿@page "/Account/Register"
+
+@rendermode InteractiveServer
+
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using Fhirlabs.Ehr.Data
@@ -13,6 +16,7 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject IDialogService Dialog
 
 <PageTitle>Register</PageTitle>
 
@@ -27,9 +31,12 @@
             <hr />
             <ValidationSummary class="text-danger" role="alert" />
             <div class="form-floating mb-3">
-                <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                <label for="email">Email</label>
-                <ValidationMessage For="() => Input.Email" class="text-danger" />
+                <div class="form-floating mb-3" >
+                    <InputText @bind-Value="Input.Email" class="form-control" autocomplete="username" aria-required="true" placeholder="name@example.com" />
+                    <label for="email">Email</label>
+                    <ValidationMessage For="() => Input.Email" class="text-danger" />
+                </div>
+                <MudIconButton Icon="@Icons.Material.Filled.Launch" style="position: absolute; top: 0px; right: 0px;" @onclick="FindSystemEmail" />
             </div>
             <div class="form-floating mb-3">
                 <InputText type="password" @bind-Value="Input.Password" class="form-control" autocomplete="new-password" aria-required="true" placeholder="password" />
@@ -72,7 +79,7 @@
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
         var result = await UserManager.CreateAsync(user, Input.Password);
-        
+
         if (!result.Succeeded)
         {
             identityErrors = result.Errors;
@@ -140,5 +147,10 @@
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; } = "";
+    }
+
+    private void FindSystemEmail()
+    {
+        var result = Dialog.ShowAsync<PractitionerEmailDialog>("Find a Practitioner Email", new DialogOptions() { FullScreen = true });
     }
 }
