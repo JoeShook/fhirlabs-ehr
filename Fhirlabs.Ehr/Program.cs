@@ -33,6 +33,7 @@ builder.Services.AddRazorComponents()
 
 builder.Services.AddMudServices();
 
+
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddScoped<IdentityUserAccessor>();
 builder.Services.AddScoped<IdentityRedirectManager>();
