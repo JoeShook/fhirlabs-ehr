@@ -27,8 +27,18 @@ public class BaseUrlProvider : IBaseUrlProvider
     
     public Uri GetBaseUrl()
     {
-        var baseUrl = _httpContextAccessor.HttpContext?.Session.GetString(Constants.BASE_URL) 
-                      ?? _options.CurrentValue.BaseUrl ;
+        string baseUrl;
+        try
+        {
+            baseUrl = _httpContextAccessor.HttpContext?.Session.GetString(Constants.BASE_URL)
+                      ?? _options.CurrentValue.BaseUrl;
+        }
+        catch
+        {
+            // session not available at startup.  AddIdentityCore links FhirPractitionerValidator to the User Validator collection 
+            // which depends on FhirService and in turn this class.
+            baseUrl = _options.CurrentValue.BaseUrl;
+        }
         
         return new Uri(baseUrl.EnsureEndsWith("/"));
     }

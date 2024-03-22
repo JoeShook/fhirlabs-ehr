@@ -42,6 +42,12 @@ public class FhirService : IFhirService
         await _fhirClient.DeleteAsync(location);
     }
 
+    public async Task<Practitioner?> GetPractitioner(string? userEmail)
+    {
+        var bundle = await _fhirClient.SearchAsync<Practitioner>(new SearchParams().Add("email", userEmail));
+        return bundle.Entry.Select(e => e.Resource as Practitioner).FirstOrDefault();
+    }
+
     private SearchParams BuildSearchParams(PatientSearchModel model)
     {
         var searchParams = new SearchParams();

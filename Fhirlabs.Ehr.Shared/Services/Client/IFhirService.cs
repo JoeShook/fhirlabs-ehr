@@ -18,4 +18,5 @@ public interface IFhirService
     Task<Bundle> MatchPatient(string parametersJson);
 
     System.Threading.Tasks.Task DeletePatientAsync(string location);
+    Task<Practitioner?> GetPractitioner(string? userEmail);
 }

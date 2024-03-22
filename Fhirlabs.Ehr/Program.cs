@@ -15,13 +15,12 @@ using Fhirlabs.Ehr.Data;
 using Fhirlabs.Ehr.Rcl.Model;
 using Fhirlabs.Ehr.Rcl.Services;
 using Fhirlabs.Ehr.Rcl.Services.Client;
+using Fhirlabs.Ehr.Services.Validators;
 using Hl7.Fhir.Rest;
 using LazyCache;
 using Microsoft.AspNetCore.Components.Authorization;
-using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -53,7 +52,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddIdentityCore<ApplicationUser>(options =>
     {
-        options.SignIn.RequireConfirmedAccount = true;
+                options.SignIn.RequireConfirmedAccount = true;
         // very lax so it is easy for demo.
         options.Password.RequireDigit = false;
         options.Password.RequireLowercase = false;
@@ -63,7 +62,8 @@ builder.Services.AddIdentityCore<ApplicationUser>(options =>
     })
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddSignInManager()
-    .AddDefaultTokenProviders();
+    .AddDefaultTokenProviders()
+    .AddUserValidator<FhirPractitionerValidator>();
 
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
@@ -123,3 +123,5 @@ app.MapRazorComponents<App>()
 app.MapAdditionalIdentityEndpoints();
 
 app.Run();
+
+
