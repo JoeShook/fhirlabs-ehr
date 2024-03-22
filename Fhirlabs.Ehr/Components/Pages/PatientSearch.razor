@@ -1,0 +1,130 @@
+﻿@page "/patientSearch"
+
+
+@rendermode RenderMode.InteractiveServer
+
+<MudCard Elevation="3" Style="margin-top: 10px">
+    <MudForm Model="_model" @ref="form" />
+    <MudCardContent>
+        <MudGrid>
+            <MudItem md="4" sm="6" xs="12">
+                <MudTextField @bind-Value="_model.Family"
+                              For="@(() => _model.Family)"
+                              Label="Family (last)" />
+            </MudItem>
+            <MudItem md="4" sm="6" xs="12">
+                <MudTextField @bind-Value="_model.Given"
+                              For="@(() => _model.Given)"
+                              Label="Given (first)" />
+            </MudItem>
+            <MudItem md="4" sm="6" xs="12">
+                <MudTextField @bind-Value="_model.Name"
+                              For="@(() => _model.Name)"
+                              Label="first, last or middle" />
+            </MudItem>
+            <MudItem md="4" sm="6" xs="12">
+                <MudDatePicker @bind-Date="_model.BirthDate"
+                               Label="yyyy-MM-dd"
+                               Editable="true"
+                               Mask="@(new DateMask("0000-00-00"))"
+                               DateFormat="yyyy-MM-dd"
+                               Placeholder="ISO Date" />
+            </MudItem>
+            <MudItem md="4" sm="6" xs="12">
+                <MudTextField @bind-Value="_model.Id"
+                              For="@(() => _model.Id)"
+                              Label="Resource Id" />
+            </MudItem>
+            <MudItem md="4" sm="6" xs="12">
+                <MudTextField @bind-Value="_model.Identifier"
+                              For="@(() => _model.Identifier)"
+                              Label="Fhir Identifier" />
+            </MudItem>
+        </MudGrid>
+        <MudCardActions>
+            <MudButton Class="mt-3"
+                       Color="Color.Primary"
+                       ButtonType="ButtonType.Button"
+                       Variant="Variant.Text"
+                       OnClick="Search">Search</MudButton>
+            <MudButton Class="mt-3"
+                       Color="Color.Primary"
+                       ButtonType="ButtonType.Button"
+                       Variant="Variant.Text"
+                       Disabled="@(string.IsNullOrEmpty(_model.Id))"
+                       OnClick="Get">Get</MudButton>
+            <MudButton Class="mt-3"
+                       Color="Color.Primary"
+                       ButtonType="ButtonType.Button"
+                       Variant="Variant.Text"
+                       OnClick="Cancel">Cancel</MudButton>
+        </MudCardActions>
+    </MudCardContent>
+</MudCard>
+
+    <MudCard Elevation="3" Style="margin-top: 10px">
+        <MudCardContent>
+            <MudTable @ref="_table"
+                      @bind-RowsPerPage="RowsPerPage"
+                      T="Patient"
+                      ServerData="@(new Func<TableState, Task<TableData<Patient>>>(Reload))"
+                      MultiSelection="false"
+                      Dense="@true"
+                      Hover="@true"
+                      ReadOnly="@true"
+                      SortLabel="Name"
+                      CommitEditTooltip="Commit Edit"
+                      IsEditRowSwitchingBlocked="@true"
+                      ApplyButtonPosition="@TableApplyButtonPosition.Start"
+                  Breakpoint="Breakpoint.Sm"
+                      OnRowClick="@OnRowClick"
+                      RowClassFunc="@SelectedRowClassFunc">
+                
+                <HeaderContent>
+                    <MudTh>Name</MudTh>
+                    <MudTh>BirthDate</MudTh>
+                    <MudTh>Id</MudTh>
+                    <MudTh>Identifier</MudTh>
+                    <MudTh/>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Name">@(new MarkupString(string.Join("<br/> ", context.Name.Select(hn => $"{hn.Given.First()}, {hn.Family}"))))</MudTd>
+                    <MudTd DataLabel="BirthDate">@context.BirthDate</MudTd>
+                    <MudTd DataLabel="Id">@context.Id</MudTd>
+                    <MudTd DataLabel="Identifier">@(new MarkupString(string.Join("<br/> ", context.Identifier.Select(identifier => $"{identifier.System}|{identifier.Value}"))))</MudTd>
+                    <MudTd>
+                        <MudIconButton Size="@Size.Small" Icon="@Icons.Filled.DeleteForever" Class="pa-0" Color="Color.Warning"
+                                       OnClick="@(() => DeletePatient(context))"/>
+                    </MudTd>
+                </RowTemplate>
+                <NoRecordsContent>
+                    <MudText>No matching records found</MudText>
+                </NoRecordsContent>
+                <LoadingContent>
+                    <MudText>Loading...</MudText>
+                </LoadingContent>
+                <PagerContent>
+                    <MudTablePager PageSizeOptions="new int[] { 5, 10, 25, 50, 100 }"/>
+                </PagerContent>
+
+            </MudTable>
+
+            @if (_outComeMessage != null)
+            {
+                <MudAlert Severity="Severity.Error"><pre>@(new MarkupString(_outComeMessage))</pre></MudAlert>
+            }
+        </MudCardContent>
+    </MudCard>
+
+
+@if (!string.IsNullOrEmpty(_selectedItemText))
+{
+    <MudCard Elevation="3" Style="margin-top: 10px">
+        <MudCardHeader>
+            <MudButton OnClick="() => _selectedItemText = string.Empty">Clear</MudButton>
+        </MudCardHeader>
+        <MudCardContent>
+            <pre>@_selectedItemText</pre>
+        </MudCardContent>
+    </MudCard>
+}

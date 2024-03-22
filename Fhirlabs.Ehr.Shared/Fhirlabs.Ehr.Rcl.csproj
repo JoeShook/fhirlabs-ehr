@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <AddRazorSupportForMvc>true</AddRazorSupportForMvc>
+  </PropertyGroup>
+
+  
+  <ItemGroup>
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="Google.Apis.Auth" Version="1.67.0" />
+    <PackageReference Include="Hl7.Fhir.R4" Version="4.3.0" />
+    <PackageReference Include="LazyCache" Version="2.4.0" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0" />
+    <PackageReference Include="MudBlazor" Version="6.18.0" />
+    <PackageReference Include="Udap.Util" Version="0.3.22" />
+  </ItemGroup>
+
+</Project>

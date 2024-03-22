@@ -1,0 +1,21 @@
+﻿@using Fhirlabs.Ehr.Rcl.Shared
+
+<CascadingAppState>
+    <Router AppAssembly="@typeof(Program).Assembly" AdditionalAssemblies="new [] {typeof(IAppState).Assembly}">
+        <Found Context="routeData">
+            <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(Layout.MainLayout)">
+                <NotAuthorized>
+                    <RedirectToLogin />
+                </NotAuthorized>
+            </AuthorizeRouteView>
+            <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        </Found>
+        <NotFound>
+            @*  Feature isn't going to be used in future I believe.
+
+                Using app.UseStatusCodePagesWithRedirects("/404"); 
+            *@
+        </NotFound>
+    </Router>
+</CascadingAppState>
+
