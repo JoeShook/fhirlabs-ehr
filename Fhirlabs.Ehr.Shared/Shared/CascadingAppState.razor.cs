@@ -59,29 +59,7 @@ public partial class CascadingAppState : ComponentBase, IAppState
             }
         }
     }
-
-    /// <summary>
-    /// Implement property handlers like so
-    /// </summary>
-    private string message = "";
-    public string Message
-    {
-        get => message;
-        set
-        {
-            message = value;
-            // Force a re-render
-            StateHasChanged();
-            // Notify any listeners
-            NotifyPropertyChanged(new("Message", value));
-            // Save to local storage
-            new Task(async () =>
-            {
-                await Save();
-            }).Start();
-        }
-    }
-
+    
     private PatientSearchPref? _patientSearchPref;
 
     public PatientSearchPref PatientSearchPref
@@ -112,7 +90,7 @@ public partial class CascadingAppState : ComponentBase, IAppState
 
     protected override void OnInitialized()
     {
-        Message = "Initial Message";
+        
     }
 
     public async Task Save()

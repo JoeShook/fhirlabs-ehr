@@ -9,6 +9,8 @@
 
 using Blazored.LocalStorage;
 using Fhirlabs.Ehr.Client;
+using Fhirlabs.Ehr.Rcl.Services.Client;
+using LazyCache;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using MudBlazor.Services;
@@ -21,6 +23,9 @@ builder.Services.AddMudServices();
 builder.Services.AddAuthorizationCore();
 builder.Services.AddCascadingAuthenticationState();
 builder.Services.AddSingleton<AuthenticationStateProvider, PersistentAuthenticationStateProvider>();
+
+builder.Services.AddScoped<IFhirService, FhirService>();
+builder.Services.AddSingleton<IAppCache, CachingService>();
 builder.Services.AddBlazoredLocalStorage();
 
 await builder.Build().RunAsync();
