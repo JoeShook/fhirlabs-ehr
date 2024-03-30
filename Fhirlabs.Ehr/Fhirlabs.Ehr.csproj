@@ -24,6 +24,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="8.*" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.*" />
     <PackageReference Include="MudBlazor" Version="6.18.0" />
+    <PackageReference Include="Udap.Smart.Metadata" Version="0.3.24" />
   </ItemGroup>
 
 </Project>

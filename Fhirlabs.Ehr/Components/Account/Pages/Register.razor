@@ -151,7 +151,7 @@
 
     private async Task FindSystemEmail()
     {
-        var reference = await Dialog.ShowAsync<PractitionerEmailDialog>("Find a Practitioner Email", new DialogOptions() { FullWidth = true, MaxWidth = MaxWidth.Medium });
+        var reference = await Dialog.ShowAsync<PractitionerEmailDialog>("Find a Practitioner Email", new DialogOptions() { FullWidth = true, MaxWidth = MaxWidth.Medium});
         Input.Email = (await reference.Result).Data?.ToString() ?? "";
     }
 }

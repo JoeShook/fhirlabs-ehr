@@ -1,11 +1,11 @@
 ﻿@using Fhirlabs.Ehr.Rcl.Services.Client
 
+@rendermode InteractiveServer
 <MudDialog>
     <DialogContent>
         <MudCard Elevation="3"  Style="max-height: calc(100vh - (var(--mud-appbar-height) - 32px)); height: auto;  overflow-y: scroll;margin-top:32px;">
             <MudCardContent>
                 <MudTable @ref="_table"
-                          @bind-RowsPerPage="RowsPerPage"
                           T="Practitioner"
                           ServerData="@(new Func<TableState, Task<TableData<Practitioner>>>(Reload))"
                           MultiSelection="false"
@@ -44,7 +44,7 @@
                         <MudText>Loading...</MudText>
                     </LoadingContent>
                     <PagerContent>
-                        <MudTablePager PageSizeOptions="new int[] { 10, 25, 50, 100 }"/>
+                        <MudTablePager T="Practitioner" PageSizeOptions="new int[] { 10, 25, 50, 100 }"/>
                     </PagerContent>
 
                 </MudTable>
@@ -68,59 +68,3 @@
         color: white !important;
     }
 </style>
-
-@code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
-    
-    [Inject]
-    private IFhirService FhirService { get; set; } = null!;
-
-    private int selectedRowNumber = -1;
-    private MudTable<Practitioner> _table;
-    private Bundle? currentPage = null;
-    private string searchString = string.Empty;
-    private string selectedEmail = string.Empty;
-
-    void Submit() => MudDialog.Close(DialogResult.Ok(selectedEmail));
-    void Cancel() => MudDialog.Cancel();
-
-    private string SelectedRowClassFunc(Practitioner element, int rowNumber)
-    {
-        selectedEmail = element.Telecom.Where(t => t.System == ContactPoint.ContactPointSystem.Email)
-            .Select(t => t.Value).FirstOrDefault() ?? string.Empty;
-
-        if (selectedRowNumber == rowNumber)
-        {
-            selectedRowNumber = -1;
-            return string.Empty;
-        }
-        else if (_table.SelectedItem != null && _table.SelectedItem.Equals(element))
-        {
-            selectedRowNumber = rowNumber;
-            return "selected";
-        }
-        else
-        {
-            return string.Empty;
-        }
-    }
-
-
-    public int RowsPerPage { get; set; } = 5;
-
-    private void OnSearch(string text)
-    {
-        searchString = text;
-        currentPage = null;
-        _table.ReloadServerData();
-    }
-
-    private async Task<TableData<Practitioner>> Reload(TableState arg)
-    {
-        var bundle = await FhirService.GetPractitioners(currentPage, searchString);
-        currentPage = bundle;
-        var practitioners = bundle.Entry.Select(entry => entry.Resource).Cast<Practitioner>().ToList();
-
-        return new TableData<Practitioner>() { TotalItems = bundle.Total.Value, Items = practitioners };
-    }
-}

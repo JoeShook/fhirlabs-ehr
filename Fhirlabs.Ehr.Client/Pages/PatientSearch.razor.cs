@@ -19,9 +19,9 @@ public partial class PatientSearch
     private string? _outComeMessage;
     private string _selectedItemText = string.Empty;
     private Bundle? currentPage = null;
-    
 
-    [CascadingParameter] 
+
+    [CascadingParameter]
     public CascadingAppState AppState { get; set; } = null!;
 
     [Inject] private IJSRuntime Js { get; set; } = null!;
@@ -33,7 +33,7 @@ public partial class PatientSearch
     public required IOptionsMonitor<FhirClientOptions> FhirClientOptions { get; set; }
 
     public int RowsPerPage { get; set; } = 5;
-   
+
 
     private async Task Search()
     {
@@ -55,7 +55,7 @@ public partial class PatientSearch
         _model = new();
     }
 
-    
+
     private async Task<TableData<Patient>> Reload(TableState state)
     {
         var bundle = await FhirService.GetPatientsAsync(currentPage, _model);
@@ -66,8 +66,8 @@ public partial class PatientSearch
         _model.Page = state.Page;
 
         var patients = bundle.Entry.Select(entry => entry.Resource).Cast<Patient>().ToList();
-        
-        return new TableData<Patient>() { TotalItems = bundle.Total.Value, Items = patients};
+
+        return new TableData<Patient>() { TotalItems = bundle.Total.Value, Items = patients };
     }
 
     private async Task DeletePatient(Patient patient)
